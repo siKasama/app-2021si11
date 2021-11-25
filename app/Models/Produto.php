@@ -9,9 +9,9 @@ class Produto extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome', 'quantidade'];
+    protected $fillable = ['nome'];
 
     public function movimentacao() {
-        return $this->hasMany(Movimentacao::class);
+        return $this->hasMany(Movimento::class);
     }
 }

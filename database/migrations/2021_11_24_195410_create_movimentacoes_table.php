@@ -13,13 +13,13 @@ class CreateMovimentacoesTable extends Migration
      */
     public function up()
     {
-        Schema::create('movimentacoes', function (Blueprint $table) {
+        Schema::create('movimentos', function (Blueprint $table) {
             $table->id()->from(1);
             $table->timestamps();
             $table->foreignId('produto_id')->constrained()->onDelete('cascade');
+            $table->string('SKU');
             $table->bigInteger('quantidade');
             $table->dateTime('data');
-            $table->string('tipo', 1);
             $table->softDeletes();
         });
     }
@@ -31,6 +31,6 @@ class CreateMovimentacoesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('movimentacoes');
+        Schema::dropIfExists('movimentos');
     }
 }

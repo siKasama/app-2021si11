@@ -23,6 +23,7 @@ class ProdutoController extends Controller
     {
         $produto = new Produto;
         $produto->nome = $request->input('nome');
+        $produto->SKU = $request->input('SKU');
         $produto->quantidade = $request->input('quantidade');
 
         if ($produto->save()) {
@@ -36,22 +37,25 @@ class ProdutoController extends Controller
         return new ProdutoResource($produto);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function atualizaProduto($id, $quantidade)
     {
-        //
+        $produto = Produto::findOrFail($id);
+        $quantidadeAtual = $produto->quantidade += $quantidade;
+        if ($quantidadeAtual < 0) {
+            return ['sucesso' => false, 'mensagem' => "Quantidade informada maior que o estoque disponível"];
+        }
+        $produto->quantidade = $quantidadeAtual;
+        if ($produto->save()) {
+            return ['sucesso' => true];
+        }
+        return ['sucesso' => false, 'mensagem' => "Estoque não atualizado"];
     }
+
 
     public function update(Request $request, $id)
     {
-        $produto = Produto::findOrFail($request->id);
+        $produto = Produto::findOrFail($id);
         $produto->nome = $request->input('nome');
-        $produto->quantidade = $request->input('quantidade');
 
         if ($produto->save()) {
             return new ProdutoResource($produto);
