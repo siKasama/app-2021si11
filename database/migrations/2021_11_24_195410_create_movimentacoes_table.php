@@ -16,8 +16,7 @@ class CreateMovimentacoesTable extends Migration
         Schema::create('movimentacoes', function (Blueprint $table) {
             $table->id()->from(1);
             $table->timestamps();
-            $table->bigInteger('produto_id')->unsigned();
-            $table->foreign('produto_id')->references('id')->on('produtos')->onDelete('cascade');
+            $table->foreignId('produto_id')->constrained()->onDelete('cascade');
             $table->bigInteger('quantidade');
             $table->dateTime('data');
             $table->string('tipo', 1);
