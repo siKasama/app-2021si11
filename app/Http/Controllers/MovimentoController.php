@@ -7,6 +7,7 @@ use App\Models\Movimento;
 use App\Models\Produto;
 use App\Http\Resources\Movimento as MovimentoResource;
 use App\Http\Controllers\ProdutoController;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MovimentoController extends Controller
 {
@@ -16,10 +17,15 @@ class MovimentoController extends Controller
         return MovimentoResource::collection($movimentacoes);
     }
 
-
     public function store(Request $request)
     {
-        $produto = Produto::findOrFail($request->produto_id);
+        try{
+            $produto = Produto::findOrFail($request->produto_id);
+        }
+        catch(ModelNotFoundException $e) {
+            return MovimentoResource::toMessage(['sucesso' => false, 'mensagem' => "Produto não cadastrado!"]);
+        }
+
         $prodController = new ProdutoController;
         $estoqueAtualizado = $prodController->atualizaProduto($produto->id, $request->quantidade);
 
@@ -43,48 +49,4 @@ class MovimentoController extends Controller
         return['sucesso' => false, 'mensagem' => 'Não foi possível atualizar o estoque!'];
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

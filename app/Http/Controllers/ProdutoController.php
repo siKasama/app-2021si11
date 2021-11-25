@@ -14,11 +14,6 @@ class ProdutoController extends Controller
         return ProdutoResource::collection($produtos);
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(Request $request)
     {
         $produto = new Produto;
@@ -37,21 +32,6 @@ class ProdutoController extends Controller
         return new ProdutoResource($produto);
     }
 
-    public function atualizaProduto($id, $quantidade)
-    {
-        $produto = Produto::findOrFail($id);
-        $quantidadeAtual = $produto->quantidade += $quantidade;
-        if ($quantidadeAtual < 0) {
-            return ['sucesso' => false, 'mensagem' => "Quantidade informada maior que o estoque disponível"];
-        }
-        $produto->quantidade = $quantidadeAtual;
-        if ($produto->save()) {
-            return ['sucesso' => true];
-        }
-        return ['sucesso' => false, 'mensagem' => "Estoque não atualizado"];
-    }
-
-
     public function update(Request $request, $id)
     {
         $produto = Produto::findOrFail($id);
@@ -69,4 +49,19 @@ class ProdutoController extends Controller
             return new ProdutoResource($produto);
         }
     }
+
+    public function atualizaProduto($produtoId, $quantidade)
+    {
+        $produto = Produto::find($produtoId);
+        $quantidadeAtual = $produto->quantidade += $quantidade;
+        if ($quantidadeAtual < 0) {
+            return ['sucesso' => false, 'mensagem' => "Quantidade informada maior que o estoque disponível"];
+        }
+        $produto->quantidade = $quantidadeAtual;
+        if ($produto->save()) {
+            return ['sucesso' => true];
+        }
+        return ['sucesso' => false, 'mensagem' => "Estoque não atualizado"];
+    }
+
 }
